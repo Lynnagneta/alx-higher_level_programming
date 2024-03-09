@@ -1,44 +1,36 @@
 #!/usr/bin/python3
-'''A module for managing students.
-'''
+'''Contains module 10'''
+
 
 class Student:
-    '''Represents a student.
-    '''
+    '''Representation of a student'''
     def __init__(self, first_name, last_name, age):
-        '''Initializes this student with the given first name,
-        last name, and age.
-        '''
+        '''Initializes the student'''
         self.first_name = first_name
         self.last_name = last_name
         self.age = age
 
     def to_json(self, attrs=None):
-        '''Retrieves a dictionary of this student's attributes.
-            
-        Args:
-            attrs (list): A list of attributes that can be retrieved.
-        Returns:
-            dict: A dictionary of this student's attributes.
+        '''Return a dictinary representation of a Student instance
+        If attrs is a list of strings, only attribute names contained
+        in this list must be retrieved.
+        Otherwise, all attributes must be retrieved
         '''
-        if '__dict__' in dir(self):
-            res = dict()
-            can_filter = False
-            if (type(attrs) is list) and all(type(s) is str for s in attrs):
-                can_filter = True
-            for key in self.__dict__.keys():
-                if (not can_filter) or (can_filter and key in attrs):
-                    res[key] = self.__dict__[key]
-            return res
+        try:
+            for attr in attrs:
+                if type(attr) is not str:
+                    return self.__dict__
+        except Exception:
+            return self.__dict__
+        my_dict = dict()
+        for key, value in self.__dict__.items():
+            if key in attrs:
+                my_dict[key] = value
+        return my_dict
 
     def reload_from_json(self, json):
-        '''Replaces all attributes of this Student instance with the
-        key-value pairs in the given dictionary.
-        
-        Args:
-            json (dict): A dictionary of new attributes for this student.
+        '''this function replaces all attributes of the student instance with the ones in json argument.
         '''
-        if isinstance(json, dict) and ('__dict__' in dir(self)):
-            # self.__dict__.clear()
-            for key in json.keys():
-                self.__dict__[key] = json[key]
+        for key, value in json.items():
+            if key in self.__dict__:
+                self.__dict__[key] = value
